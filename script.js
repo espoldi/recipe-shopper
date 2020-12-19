@@ -1,3 +1,10 @@
+//declaring global vraiables
+var searchInput = "";
+var currentIds = [];
+var ingredientID = "";
+var counter = 0;
+let ingredientList = [];
+
 document.getElementById("displayJsDate").textContent = moment().format('dddd, MMMM Do YYYY');
 
 // Trivia Banner
@@ -10,12 +17,12 @@ function setBanner() {
         url: getTrivia,
         method: "GET"
 
-    }).then(function(response) {
-        
+    }).then(function (response) {
+
         let spot = Math.floor(Math.random() * 215) + 1;
 
         // Loop to weed out empty entries
-        if(response.clues[spot].question === "" || response.clues[spot].answer === "") {
+        if (response.clues[spot].question === "" || response.clues[spot].answer === "") {
             setBanner();
         }
         else {
@@ -23,19 +30,17 @@ function setBanner() {
             $(".triviaBanner").append(`${response.clues[spot].question}? <button class="triviaReveal" value=${response.clues[spot].answer}>Reveal Answer</button>`);
         }
 
-        $(".triviaReveal").on("click", function() {
+        $(".triviaReveal").on("click", function () {
             $(".triviaReveal").text(triviaValue);
         })
-    })}
+    })
+}
 setBanner();
 
-//Search input
-var searchInput = "";
-var currentIds = [];
 
-//API related variables
-let apiKey = "fff75352e87a4053a01dfc5c9c2d9545";
-let recipeCount = 4;
+//Spoonacular Recipe API - call based on searched input 
+let apiKey = "908fa13543d44e09a8394d63af4bb148";
+let recipeCount = 8;
 
 function searchRecipe(searchInput) {
     currentIds = [];
@@ -49,7 +54,7 @@ function searchRecipe(searchInput) {
 
     }).then(function (response) {
 
-        var local = localStorage.setItem(recipeCount, searchInput)
+        var local = localStorage.setItem(recipeCount, searchInput);
 
         for (var i = 0; i < response.results.length; i++) {
 
@@ -64,13 +69,16 @@ function searchRecipe(searchInput) {
     });
 }
 
+//Spoonacular Recipe API - second call for dynamically generated cards, and ingredientList
 function renderTopRecipes() {
 
     //console.log("Ids", currentIds);
 
-    let cardDeck = "";
 
-    currentIds.forEach(function (element, i, arr) {
+    currentIds.forEach(function (element, j, arr) {
+
+        ingredientList = [];
+
         console.log(element);
         let queryURL = `https://api.spoonacular.com/recipes/${element}/information?apiKey=${apiKey}`;
         $.ajax({
@@ -96,74 +104,100 @@ function renderTopRecipes() {
                             </div>`
             );
 
-            getIngredients(response);
-            
+            //adding ingredients into ingredientList array for shopping cart
+            let arr = []
+
+            for (var i = 0; i < response.extendedIngredients.length; i++) {
+                arr.push(response.extendedIngredients[i].name);
+
+            }
+
+            ingredientList.push({
+                [`recipe${counter}`]: arr
+            });
+
+            counter += 1;
+
         });
 
     });
 
-}
-
-var ingredientID = "";
-var ingredientList = [];
-
-var getIngredients = function(recipe) {
-
-$(".fa-cookie-bite").on("click", function (event) {
-console.log("ingredients",recipe);
-//      = event.target.value;
-//     //ingredientList = event.target;
-//     console.log(ingredientID);
-
-//     foodItem = `https://api.spoonacular.com/recipes/${ingredientID}/ingredientWidget.json`;
-
-// //     for (var i = 0; i < ingredientID.length; i++) {ingredientID
-// //         console.log(ingredientID)
-// //     }
-
-})
+    console.log("ingredients", ingredientList);
 }
 
 
-// Show and hide shopping list using close button
+//var ingredientList = {
+    //     recipe0 : [],
+
+
+    // var getIngredients = function(recipe) {
+
+    // $(".fa-cookie-bite").on("click", function (event) {
+    // console.log("ingredients",recipe);
+
+
+    //      = event.target.value;
+    //     //ingredientList = event.target;
+    //     console.log(ingredientID);
+
+    //     foodItem = `https://api.spoonacular.com/recipes/${ingredientID}/ingredientWidget.json`;
+
+    // //     for (var i = 0; i < ingredientID.length; i++) {ingredientID
+    // //         console.log(ingredientID)
+    // //     }
+
+    //})
+//}
+
+
+//CLICK HANDLERS
+// Show shopping list
 $(".fa-shopping-basket").on("click", function () {
     $(".listPopup").show();
 });
 
-$(".fa-users").on("click", function () {
-    $(".aboutUs").show();
-});
-
+// Hide shopping list using close button
 $(".closeList").on("click", function () {
     $(".listPopup").hide();
 });
 
+// Show About us section
+$(".fa-users").on("click", function () {
+    $(".aboutUs").show();
+});
+
+// Hide About us section
 $(".closeDev").on("click", function () {
     $(".aboutUs").hide();
 });
 
+
+// Show burger menu
 $(".burger").on("click", function () {
     $(".menu").attr(transform, scaleX(0));
 });
-$(".closeBanner").on("click",function(){
+
+// Hide trivia banner
+$(".closeBanner").on("click", function () {
     $(".triviaBanner").hide();
 })
 
-$(".clearBtn").on("click",function(event){
+// Clear search input
+$(".clearBtn").on("click", function (event) {
     event.preventDefault();
 
     $('input[type="search"]').val('');
 })
 
-// Click Function for hiding/showing diet restrictions
+// Toggler hiding/showing diet restrictions
 $('.fa-sliders-h').click(function () {
     $('.filters').slideToggle(700); // Toggles the slide motion of the box
 });
 
-//Click Handler When Search is Submitted
+// Search button click
 $(".fa-search").on("click", function (event) {
-    
-    
+
+
     event.preventDefault();
 
     var searchInput = $(".searchRecipe").val();
