@@ -97,7 +97,7 @@ function renderTopRecipes() {
                             <hr>
                             <p style="font-size: 12px; font-weight:bold;">Prep Time: ${response.readyInMinutes}, Servings: ${response.servings}</p>
                             <h4> ${response.title}</h4>
-                            <button class="button fas fa-cookie-bite" value="${response.id}" title="Add Ingredients to Shopping List"></button>
+                            <button class="button fas fa-cookie-bite cardClass${[j]}" value="${response.id}" title="Add Ingredients to Shopping List"></button>
                             <p style="height: 10ch;">Description: ${response.summary}</p>
                             </footer>
                             </article>
@@ -126,14 +126,12 @@ function renderTopRecipes() {
 }
 
 
-//var ingredientList = {
-    //     recipe0 : [],
+// function to populate ingerients in shopping cart
 
+    function getIngredients() {
 
-    // var getIngredients = function(recipe) {
-
-    // $(".fa-cookie-bite").on("click", function (event) {
-    // console.log("ingredients",recipe);
+    $(".fa-cookie-bite").on("click", function (event) {
+    console.log($(this).val());
 
 
     //      = event.target.value;
@@ -144,10 +142,10 @@ function renderTopRecipes() {
 
     // //     for (var i = 0; i < ingredientID.length; i++) {ingredientID
     // //         console.log(ingredientID)
-    // //     }
+});
 
-    //})
-//}
+    
+}
 
 
 //CLICK HANDLERS
