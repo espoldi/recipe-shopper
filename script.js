@@ -97,7 +97,7 @@ function renderTopRecipes() {
                             <hr>
                             <p style="font-size: 12px; font-weight:bold;">Prep Time: ${response.readyInMinutes}, Servings: ${response.servings}</p>
                             <h4> ${response.title}</h4>
-                            <button class="button fas fa-cookie-bite cardClass${[j]}" value="${response.id}" title="Add Ingredients to Shopping List"></button>
+                            <button class="button fas fa-cookie-bite cardClass${[j]}" value="${response.title}" title="Add Ingredients to Shopping List"></button>
                             <p style="height: 10ch;">Description: ${response.summary}</p>
                             </footer>
                             </article>
@@ -113,10 +113,8 @@ function renderTopRecipes() {
             }
 
             ingredientList.push({
-                [`recipe${counter}`]: arr
+                [`${response.title}`]: arr
             });
-
-            counter += 1;
 
         });
 
@@ -127,25 +125,16 @@ function renderTopRecipes() {
 
 
 // function to populate ingerients in shopping cart
+$(".fa-cookie-bite").on("click", function () {
+    console.log("hi");
 
-    function getIngredients() {
-
-    $(".fa-cookie-bite").on("click", function (event) {
-    console.log($(this).val());
-
+    //    function getIngredients() {}
 
     //      = event.target.value;
     //     //ingredientList = event.target;
     //     console.log(ingredientID);
 
-    //     foodItem = `https://api.spoonacular.com/recipes/${ingredientID}/ingredientWidget.json`;
-
-    // //     for (var i = 0; i < ingredientID.length; i++) {ingredientID
-    // //         console.log(ingredientID)
 });
-
-    
-}
 
 
 //CLICK HANDLERS
